@@ -1,10 +1,11 @@
-#include "jk_b5d_manager.h"
 #include <QtWidgets/QApplication>
+#include "Ui/JKMainWin.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	jk_b5d_manager w;
+	JKMainWin w;
 	w.show();
 	return a.exec();
 }
+
