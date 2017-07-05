@@ -62,6 +62,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_JKTableModel.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Ui\JKTableDelegate.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_JKTableDelegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_JKTableDelegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="jk_b5d_manager.qrc">
@@ -74,6 +83,9 @@
       <Filter>Ui</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\JKTableModel.h">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Ui\JKTableDelegate.h">
       <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>

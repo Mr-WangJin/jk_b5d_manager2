@@ -34,24 +34,24 @@ void JKFilesData::initialize()
 
 	JKString data;
 	size_t dataLen = 0;
-	JKFile::ReadFile(B5D_JSON_DIR, JKFile::Read, data, dataLen);
-
-
-	Json::Reader reader;
-	Json::Value result;
-	reader.parse(data, result);
-
-	Json::Value b5DFiles = result["B5DFiles"];
-	for (int i = 0; i< b5DFiles.size(); ++i)
+	if (JKFile::ReadFile(B5D_JSON_DIR, JKFile::Read, data, dataLen))
 	{
-		Json::Value b5dFile = b5DFiles[i];
-		
-		JKFileData* pB5DFile = new JKFileData;
-		pB5DFile->setFileName(b5dFile["name"].asString());
-		pB5DFile->setFullPath(b5dFile["path"].asString());
-		pB5DFile->setVersionNum(b5dFile["versionNum"].asString());
+		Json::Reader reader;
+		Json::Value result;
+		reader.parse(data, result);
 
-		m_VecFiles.push_back(pB5DFile);
+		Json::Value b5DFiles = result["B5DFiles"];
+		for (int i = 0; i < b5DFiles.size(); ++i)
+		{
+			Json::Value b5dFile = b5DFiles[i];
+
+			JKFileData* pB5DFile = new JKFileData;
+			pB5DFile->setFileName(b5dFile["name"].asString());
+			pB5DFile->setFullPath(b5dFile["path"].asString());
+			pB5DFile->setVersionNum(b5dFile["versionNum"].asString());
+
+			m_VecFiles.push_back(pB5DFile);
+		}
 	}
 }
 
@@ -60,24 +60,22 @@ JKFileData * JKFilesData::getFileData(const int & idx)
 	return m_VecFiles[idx];
 }
 
-void JKFilesData::addFile(JKFileData* pB5DFile)
+void JKFilesData::addFile(JKFileData* pFileData)
 {
-	assert(pB5DFile);
+	assert(pFileData);
 
-	m_VecFiles.push_back(pB5DFile);
+	m_VecFiles.push_back(pFileData);
 }
 
-void JKFilesData::deleteFile(const int & idx)
+void JKFilesData::deleteFile(const JKFileData * pFileData)
 {
-	if (m_VecFiles.size() <= idx)
-		return;
-
-	std::vector<JKFileData*>::iterator iterTemp = std::find(m_VecFiles.begin(), m_VecFiles.end(), m_VecFiles[idx]);
+	std::vector<JKFileData*>::iterator iterTemp = std::find(m_VecFiles.begin(), m_VecFiles.end(), pFileData);
 	if (iterTemp != m_VecFiles.end())
 	{
 		m_VecFiles.erase(iterTemp);
 	}
 }
+
 
 bool WriteFile(const char* fileName, const char *_Mode, const char *buffer, const long &lSize)
 {
@@ -108,7 +106,7 @@ void JKFilesData::saveB5DFile()
 	root["B5DFiles"] = arrayObj;
 
 	std::string out = root.toStyledString();
-	JKFile::WriteFile(B5D_JSON_DIR, JKFile::Write_Plus, JKString(), out.size());
+	JKFile::WriteFile(B5D_JSON_DIR, JKFile::Write_Plus, out, out.size());
 }
 
 

@@ -13,8 +13,8 @@ public:
 	void initialize();
 
 	JKFileData* getFileData(const int &idx);
-	void addFile(JKFileData* pB5DFile);
-	void deleteFile(const int &idx);
+	void addFile(JKFileData* pFileData);
+	void deleteFile(const JKFileData* pFileData);
 	void saveB5DFile();
 
 	JKFileData* getB5DFile(const int &idx);

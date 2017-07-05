@@ -20,6 +20,9 @@ public slots:
 	void onDeleteFile();
 	void onSave();
 
+	void onRunExe();
+	void onRunTool();
+
 private:
 	void initClass();
 
