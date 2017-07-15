@@ -6,6 +6,8 @@
 #include "JKTableDelegate.h"
 #include <Windows.h>
 #include "JKUtil/JKStringUtil.h"
+#include <QFileInfo>
+#include <QKeyEvent>
 
 JKMainWin::JKMainWin(QWidget *parent)
 	: QMainWindow(parent)
@@ -61,6 +63,30 @@ void JKMainWin::onRunExe()
 
 void JKMainWin::onRunTool()
 {
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+	std::string str = pFileData->getFullPath();
+	QFileInfo fileInfo(QString(str.c_str()));
+	QString toolName = QString("%1/%2").arg(fileInfo.path()).arg("AdminManageTool.exe");
+	QFileInfo toolFileInfo(toolName);
+	if (toolFileInfo.exists() == false)
+		return;
+
+	std::string command = "\"" + toolName.toStdString() + "\"";
+
+	ShellExecute(NULL, L"open", JK_NAMESPACE::JKStringUtil::to_wstring(command).c_str(), NULL, NULL, SW_SHOWDEFAULT);
+}
+
+void JKMainWin::keyPressEvent(QKeyEvent * event)
+{
+	if (event->key() == Qt::Key_S && event->modifiers() & Qt::ControlModifier)
+	{
+		m_pFilesData->saveB5DFile();
+	}
+
+	QMainWindow::keyPressEvent(event);
 }
 
 void JKMainWin::initClass()
@@ -83,6 +109,6 @@ void JKMainWin::initClass()
 	connect(m_ui.m_pActAdd, SIGNAL(triggered()), this, SLOT(onAddFile()));
 	connect(m_ui.m_pActDelete, SIGNAL(triggered()), this, SLOT(onDeleteFile()));
 	connect(m_ui.m_pActSave, SIGNAL(triggered()), this, SLOT(onSave()));
-	connect(m_ui.m_pPBtnRunner, SIGNAL(triggered()), this, SLOT(onRunExe()));
-	connect(m_ui.m_pPBtnToolRunner, SIGNAL(triggered()), this, SLOT(onRunTool()));
+	connect(m_ui.m_pPBtnRunner, SIGNAL(clicked()), this, SLOT(onRunExe()));
+	connect(m_ui.m_pPBtnToolRunner, SIGNAL(clicked()), this, SLOT(onRunTool()));
 }

@@ -99,5 +99,14 @@
     <ClInclude Include="BLL\JKFilesData.h">
       <Filter>BLL</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="jk_b5d_manager.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Bim5D.ico" />
   </ItemGroup>
 </Project>

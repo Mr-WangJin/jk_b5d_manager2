@@ -1,4 +1,7 @@
 <RCC>
-    <qresource prefix="jk_b5d_manager">
+    <qresource prefix="/jk_b5d_manager">
+        <file>Resources/Delete.png</file>
+        <file>Resources/Open.png</file>
+        <file>Resources/Save.png</file>
     </qresource>
 </RCC>

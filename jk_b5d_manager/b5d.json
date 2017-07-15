@@ -1,9 +1,14 @@
 {
    "B5DFiles" : [
       {
-         "name" : "BIM5D",
-         "path" : "",
-         "versionNum" : ""
+         "name" : "CraftLibrary.exe",
+         "path" : "F:/Program Files/CraftLiberary/bin/CraftLibrary.exe",
+         "versionNum" : "最新工艺库"
+      },
+      {
+         "name" : "BIM5D.exe",
+         "path" : "F:/Program Files/Glodon/GBIM/pre/bin/BIM5D.exe",
+         "versionNum" : "pre"
       }
    ]
 }

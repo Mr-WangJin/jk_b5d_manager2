@@ -44,7 +44,7 @@ int JKTableModel::rowCount(const QModelIndex & parent) const
 
 int JKTableModel::columnCount(const QModelIndex & parent) const
 {
-	return 4;
+	return 3;
 }
 
 QVariant JKTableModel::data(const QModelIndex & index, int role) const
@@ -60,6 +60,16 @@ QVariant JKTableModel::data(const QModelIndex & index, int role) const
 		QString tempStr(pFileData->getFileName().c_str());
 		return QVariant(tempStr);
 	}
+	case 1:
+	{
+		QString tempStr(pFileData->getVersionNum().c_str());
+		return QVariant(tempStr);
+	}
+	case 2:
+	{
+		QString tempStr(pFileData->getFullPath().c_str());
+		return QVariant(tempStr);
+	}
 	default:
 		break;
 	}
@@ -69,6 +79,28 @@ QVariant JKTableModel::data(const QModelIndex & index, int role) const
 
 QVariant JKTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+	if (orientation != Qt::Horizontal)
+		return QVariant();
+
+	if (role != Qt::DisplayRole)
+		return QVariant();
+	switch (section)
+	{
+	case 0:
+	{
+		return QVariant(QStringLiteral("Ãû³Æ"));
+	}
+	case 1:
+	{
+		return QVariant(QStringLiteral("×¢ÊÍ"));
+	}
+	case 2:
+	{
+		return QVariant(QStringLiteral("Â·¾¶"));
+	}
+	default:
+		break;
+	}
 	return QVariant();
 }
 
@@ -82,6 +114,10 @@ bool JKTableModel::setData(const QModelIndex & index, const QVariant & value, in
 	case 0:
 	{
 		pFileData->setFileName(value.toString().toStdString());
+	}
+	case 1:
+	{
+		pFileData->setVersionNum(value.toString().toStdString());
 	}
 	default:
 		break;

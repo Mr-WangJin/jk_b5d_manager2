@@ -112,6 +112,8 @@ void JKFilesData::saveB5DFile()
 
 JKFileData * JKFilesData::getB5DFile(const int &idx)
 {
+	if (idx >= m_VecFiles.size())
+		return nullptr;
 	return m_VecFiles[idx];
 }
 

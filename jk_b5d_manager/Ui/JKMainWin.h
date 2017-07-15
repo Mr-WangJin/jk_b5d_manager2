@@ -23,6 +23,9 @@ public slots:
 	void onRunExe();
 	void onRunTool();
 
+protected:
+	void keyPressEvent(QKeyEvent *event) override;
+
 private:
 	void initClass();
 
