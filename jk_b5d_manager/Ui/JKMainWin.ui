@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
-    <height>519</height>
+    <width>686</width>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -102,6 +102,19 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="m_pPBtnRunCraft">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>运行工艺库</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
@@ -125,13 +138,16 @@
    <addaction name="m_pActAdd"/>
    <addaction name="m_pActDelete"/>
    <addaction name="m_pActSave"/>
+   <addaction name="m_pActOpenFiePath"/>
+   <addaction name="actSetOffice"/>
+   <addaction name="actSetHuNan"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>581</width>
+     <width>686</width>
      <height>23</height>
     </rect>
    </property>
@@ -143,7 +159,15 @@
     <addaction name="m_pActDelete"/>
     <addaction name="m_pActSave"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>工具</string>
+    </property>
+    <addaction name="actDelUnis"/>
+    <addaction name="actDelUnableFile"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menu"/>
   </widget>
   <action name="m_pActAdd">
    <property name="icon">
@@ -179,6 +203,37 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="m_pActOpenFiePath">
+   <property name="text">
+    <string>打开文件目录</string>
+   </property>
+   <property name="toolTip">
+    <string>打开路径</string>
+   </property>
+  </action>
+  <action name="actDelUnis">
+   <property name="text">
+    <string>禁用卸载</string>
+   </property>
+   <property name="toolTip">
+    <string>删除卸载</string>
+   </property>
+  </action>
+  <action name="actDelUnableFile">
+   <property name="text">
+    <string>删除失效文件</string>
+   </property>
+  </action>
+  <action name="actSetOffice">
+   <property name="text">
+    <string>修改为正式环境</string>
+   </property>
+  </action>
+  <action name="actSetHuNan">
+   <property name="text">
+    <string>修改为湖南环境</string>
    </property>
   </action>
  </widget>

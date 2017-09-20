@@ -19,9 +19,16 @@ public slots:
 	void onAddFile();
 	void onDeleteFile();
 	void onSave();
+	void onOpenDir();
+	void onDelUnis();
+	void onDelUnableFiles();
+
+	void onSetOffice();
+	void onSetHuNan();
 
 	void onRunExe();
 	void onRunTool();
+	void onRunCraft();
 
 protected:
 	void keyPressEvent(QKeyEvent *event) override;
@@ -29,6 +36,7 @@ protected:
 private:
 	void initClass();
 
+	void tempWriteXML();
 private:
 	Ui::JKMainWin m_ui;
 

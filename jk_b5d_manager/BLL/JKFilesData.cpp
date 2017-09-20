@@ -2,7 +2,7 @@
 #include "JKFileData.h"
 #include <json/reader.h>
 #include <json/value.h>
-#include <File/JKFile.h>
+#include <JKFile/JKFileIO.h>
 
 using namespace JK_NAMESPACE;
 
@@ -34,7 +34,7 @@ void JKFilesData::initialize()
 
 	JKString data;
 	size_t dataLen = 0;
-	if (JKFile::ReadFile(B5D_JSON_DIR, JKFile::Read, data, dataLen))
+	if (JKFileIO::ReadFile(B5D_JSON_DIR, JKFileIO::Read, data, dataLen))
 	{
 		Json::Reader reader;
 		Json::Value result;
@@ -106,7 +106,7 @@ void JKFilesData::saveB5DFile()
 	root["B5DFiles"] = arrayObj;
 
 	std::string out = root.toStyledString();
-	JKFile::WriteFile(B5D_JSON_DIR, JKFile::Write_Plus, out, out.size());
+	JKFileIO::WriteFile(B5D_JSON_DIR, JKFileIO::Write_Plus, out, out.size());
 }
 
 

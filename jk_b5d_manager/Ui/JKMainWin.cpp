@@ -8,6 +8,9 @@
 #include "JKUtil/JKStringUtil.h"
 #include <QFileInfo>
 #include <QKeyEvent>
+#include <QMessageBox>
+#include <QXmlStreamReader>
+#include <QDomDocument>
 
 JKMainWin::JKMainWin(QWidget *parent)
 	: QMainWindow(parent)
@@ -49,6 +52,107 @@ void JKMainWin::onSave()
 	m_pFilesData->saveB5DFile();
 }
 
+void JKMainWin::onOpenDir()
+{
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+	std::string str = pFileData->getFullPath();
+	QFileInfo fileInfo(QString(str.c_str()));
+
+
+	std::string command = fileInfo.absolutePath().toStdString();
+
+	ShellExecute(nullptr, L"open", nullptr, nullptr, JK_NAMESPACE::JKStringUtil::to_wstring(command).c_str(), SW_SHOWNORMAL);
+}
+
+void JKMainWin::onDelUnis()
+{
+	int fileCount = m_pFilesData->fileCount();
+	for (int i = 0; i< fileCount; ++i)
+	{
+		JKFileData* pFileData = m_pFilesData->getB5DFile(i);
+		if (pFileData == nullptr)
+			return;
+		std::string str = pFileData->getFullPath();
+		QDir dir(QString::fromStdString(str));
+		dir.cdUp(); dir.cdUp();
+
+		QFile f(dir.path()+"\\unins000.dat");
+		if (f.exists())
+			f.remove();
+		QFile f1(dir.path() + "\\unins000.exe");
+		if (f1.exists())
+			f1.remove();
+	}
+}
+
+void JKMainWin::onDelUnableFiles()
+{
+	std::vector<JKFileData*> vecDelPtr;
+	int fileCount = m_pFilesData->fileCount();
+	for (int i = 0; i < fileCount; ++i)
+	{
+		JKFileData* pFileData = m_pFilesData->getB5DFile(i);
+		if (pFileData == nullptr)
+			return;
+		std::string str = pFileData->getFullPath();
+		QFile f(QString::fromStdString(str));
+		if (!f.exists())
+			vecDelPtr.push_back(pFileData);
+	}
+	
+	for (int i = 0; i< vecDelPtr.size(); ++i)
+	{
+		m_pFilesData->deleteFile(vecDelPtr[i]);
+	}
+}
+
+void JKMainWin::onSetOffice()
+{
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+
+	std::string str = pFileData->getFullPath();
+	QDir dir(QString::fromStdString(str));
+	dir.cdUp(); 
+
+	try {
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v1", QString("https://bim5d.glodon.com/api/v1/"));
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v3", QString("https://bim5d.glodon.com/api/v3/"));
+		QMessageBox::information(this, QStringLiteral("提示！"), QStringLiteral("设置成功！"));
+	}
+	catch (std::exception &e)
+	{
+		QMessageBox::information(this, QStringLiteral("提示！"), QString("%1").arg(e.what()));
+	}
+
+}
+void JKMainWin::onSetHuNan()
+{
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+
+	std::string str = pFileData->getFullPath();
+	QDir dir(QString::fromStdString(str));
+	dir.cdUp();
+
+	try {
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v1", QString("http://bim5d-hunan.glodon.com/api/v1/"));
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v3", QString("http://bim5d-hunan.glodon.com/api/v3/"));
+		QMessageBox::information(this, QStringLiteral("提示！"), QStringLiteral("设置成功！"));
+	}
+	catch (std::exception &e)
+	{
+		QMessageBox::information(this, QStringLiteral("提示！"), QString("%1").arg(e.what()));
+	}
+}
+
 void JKMainWin::onRunExe()
 {
 	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
@@ -70,6 +174,24 @@ void JKMainWin::onRunTool()
 	std::string str = pFileData->getFullPath();
 	QFileInfo fileInfo(QString(str.c_str()));
 	QString toolName = QString("%1/%2").arg(fileInfo.path()).arg("AdminManageTool.exe");
+	QFileInfo toolFileInfo(toolName);
+	if (toolFileInfo.exists() == false)
+		return;
+
+	std::string command = "\"" + toolName.toStdString() + "\"";
+
+	ShellExecute(NULL, L"open", JK_NAMESPACE::JKStringUtil::to_wstring(command).c_str(), NULL, NULL, SW_SHOWDEFAULT);
+}
+
+void JKMainWin::onRunCraft()
+{
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+	std::string str = pFileData->getFullPath();
+	QFileInfo fileInfo(QString(str.c_str()));
+	QString toolName = QString("%1/%2").arg(fileInfo.path()).arg("CraftLibrary.exe");
 	QFileInfo toolFileInfo(toolName);
 	if (toolFileInfo.exists() == false)
 		return;
@@ -109,6 +231,31 @@ void JKMainWin::initClass()
 	connect(m_ui.m_pActAdd, SIGNAL(triggered()), this, SLOT(onAddFile()));
 	connect(m_ui.m_pActDelete, SIGNAL(triggered()), this, SLOT(onDeleteFile()));
 	connect(m_ui.m_pActSave, SIGNAL(triggered()), this, SLOT(onSave()));
+	connect(m_ui.m_pActOpenFiePath, SIGNAL(triggered()), this, SLOT(onOpenDir()));
 	connect(m_ui.m_pPBtnRunner, SIGNAL(clicked()), this, SLOT(onRunExe()));
 	connect(m_ui.m_pPBtnToolRunner, SIGNAL(clicked()), this, SLOT(onRunTool()));
+	connect(m_ui.m_pPBtnRunCraft, SIGNAL(clicked()), this, SLOT(onRunCraft()));
+	connect(m_ui.actDelUnis, SIGNAL(triggered()), this, SLOT(onDelUnis()));
+	connect(m_ui.actDelUnableFile, SIGNAL(triggered()), this, SLOT(onDelUnableFiles()));
+
+	connect(m_ui.actSetOffice, SIGNAL(triggered()), this, SLOT(onSetOffice()));
+	connect(m_ui.actSetHuNan, SIGNAL(triggered()), this, SLOT(onSetHuNan()));
+}
+
+void JKMainWin::tempWriteXML()
+{
+// 	QFile file(filename);
+// 	file.open(QIODevice::ReadWrite);
+// 	QDomDocument doc;
+// 	QDomProcessingInstruction instruction;
+// 	instruction = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"GB2312\"");
+// 	doc.appendChild(instruction);
+// 	QDomElement root = doc.createElement("ipconfig");
+// 
+// 	doc.appendChild(root);
+// 	QDomText text = doc.createTextNode("");
+// 	root.appendChild(text);
+// 	QTextStream out(&file);
+// 	doc.save(out, 4);
+// 	file.close();
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <QString>
 
 class JKFileData
@@ -18,11 +19,15 @@ public:
 	void setFullPath(const std::string &path);
 	std::string getFullPath();
 
+	bool isOffice();
+	void updateXMLNode(const QString &fileName, const QString & opt, const QString & fieldName, const QString & value);
+
 private:
 	std::string m_FileName;
 	std::string m_FullPath;
 	std::string m_VersionNum;
 
+	std::string cloudStr;
 };
 
 
