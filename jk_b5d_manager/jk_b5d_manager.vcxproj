@@ -242,6 +242,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BLL\JKCommon.h" />
     <ClInclude Include="BLL\JKFileData.h" />
     <ClInclude Include="BLL\JKFilesData.h" />
     <ClInclude Include="GeneratedFiles\ui_JKMainWin.h" />

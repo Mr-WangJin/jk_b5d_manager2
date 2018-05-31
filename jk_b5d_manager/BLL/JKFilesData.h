@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <json/value.h>
 
 class JKFileData;
 
@@ -22,8 +23,16 @@ public:
 
 	inline JKFileData* operator [] (const int &idx) const;
 
+	//升级
+	static bool upgrade(Json::Value& result);
+
+	//序列化
+	void serializable(Json::Value& result) noexcept;
+	void deSerializable(Json::Value &) noexcept;
+
+
 private:
-	std::string m_jsonStr;
+	unsigned int version;				//数据版本号
 
 	std::vector<JKFileData*> m_VecFiles;
 };

@@ -136,11 +136,9 @@
     <bool>false</bool>
    </attribute>
    <addaction name="m_pActAdd"/>
+   <addaction name="actBatchAdded"/>
    <addaction name="m_pActDelete"/>
    <addaction name="m_pActSave"/>
-   <addaction name="m_pActOpenFiePath"/>
-   <addaction name="actSetOffice"/>
-   <addaction name="actSetHuNan"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -156,15 +154,19 @@
      <string>文件</string>
     </property>
     <addaction name="m_pActAdd"/>
+    <addaction name="actBatchAdded"/>
     <addaction name="m_pActDelete"/>
+    <addaction name="actUninstall"/>
     <addaction name="m_pActSave"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>工具</string>
     </property>
-    <addaction name="actDelUnis"/>
     <addaction name="actDelUnableFile"/>
+    <addaction name="m_pActOpenFiePath"/>
+    <addaction name="actSetOffice"/>
+    <addaction name="actSetHuNan"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu"/>
@@ -234,6 +236,24 @@
   <action name="actSetHuNan">
    <property name="text">
     <string>修改为湖南环境</string>
+   </property>
+  </action>
+  <action name="actBatchAdded">
+   <property name="icon">
+    <iconset resource="../jk_b5d_manager.qrc">
+     <normaloff>:/jk_b5d_manager/Resources/Open.png</normaloff>:/jk_b5d_manager/Resources/Open.png</iconset>
+   </property>
+   <property name="text">
+    <string>批量添加Bim5d程序</string>
+   </property>
+  </action>
+  <action name="actUninstall">
+   <property name="icon">
+    <iconset resource="../jk_b5d_manager.qrc">
+     <normaloff>:/jk_b5d_manager/Resources/Delete.png</normaloff>:/jk_b5d_manager/Resources/Delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>卸载</string>
    </property>
   </action>
  </widget>

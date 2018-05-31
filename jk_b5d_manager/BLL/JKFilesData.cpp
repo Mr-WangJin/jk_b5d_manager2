@@ -1,8 +1,8 @@
 #include "JKFilesData.h"
 #include "JKFileData.h"
 #include <json/reader.h>
-#include <json/value.h>
 #include <JKFile/JKFileIO.h>
+
 
 using namespace JK_NAMESPACE;
 
@@ -24,35 +24,20 @@ JKFilesData::~JKFilesData()
 
 void JKFilesData::initialize()
 {
-// 	wxTextFile tfile;
-// 	tfile.Open(B5D_JSON_DIR);
-// 	m_jsonStr += tfile.GetFirstLine();
-// 	while (!tfile.Eof())
-// 	{
-// 		m_jsonStr += tfile.GetNextLine();
-// 	}
-
 	JKString data;
 	size_t dataLen = 0;
+	
 	if (JKFileIO::ReadFile(B5D_JSON_DIR, JKFileIO::Read, data, dataLen))
 	{
 		Json::Reader reader;
 		Json::Value result;
 		reader.parse(data, result);
 
-		Json::Value b5DFiles = result["B5DFiles"];
-		for (int i = 0; i < b5DFiles.size(); ++i)
-		{
-			Json::Value b5dFile = b5DFiles[i];
-
-			JKFileData* pB5DFile = new JKFileData;
-			pB5DFile->setFileName(b5dFile["name"].asString());
-			pB5DFile->setFullPath(b5dFile["path"].asString());
-			pB5DFile->setVersionNum(b5dFile["versionNum"].asString());
-
-			m_VecFiles.push_back(pB5DFile);
-		}
+		this->upgrade(result);
+		this->deSerializable(result);
 	}
+
+	
 }
 
 JKFileData * JKFilesData::getFileData(const int & idx)
@@ -92,18 +77,8 @@ bool WriteFile(const char* fileName, const char *_Mode, const char *buffer, cons
 void JKFilesData::saveB5DFile()
 {
 	Json::Value root;
-	Json::Value arrayObj;
 
-	for each (JKFileData* pB5DFile in m_VecFiles)
-	{
-		Json::Value item;
-		item["name"] = pB5DFile->getFileName();
-		item["path"] = pB5DFile->getFullPath();
-		item["versionNum"] = pB5DFile->getVersionNum();
-		arrayObj.append(item);
-	}
-
-	root["B5DFiles"] = arrayObj;
+	this->serializable(root);
 
 	std::string out = root.toStyledString();
 	JKFileIO::WriteFile(B5D_JSON_DIR, JKFileIO::Write_Plus, out, out.size());
@@ -115,6 +90,58 @@ JKFileData * JKFilesData::getB5DFile(const int &idx)
 	if (idx >= m_VecFiles.size())
 		return nullptr;
 	return m_VecFiles[idx];
+}
+
+void JKFilesData::serializable(Json::Value& result) noexcept
+{
+	Json::Value arrayObj;
+	for each (JKFileData* pB5DFile in m_VecFiles)
+	{
+		Json::Value item;
+		pB5DFile->serializable(item);
+		arrayObj.append(item);
+
+	}
+	result["version"] = version;
+	result["B5DFiles"] = arrayObj;
+}
+void JKFilesData::deSerializable(Json::Value& result) noexcept
+{
+	Json::Value b5DFiles = result["B5DFiles"];
+	version = result["version"].asUInt();
+	for (int i = 0; i < b5DFiles.size(); ++i)
+	{
+		Json::Value b5dFile = b5DFiles[i];
+
+		JKFileData* pB5DFile = new JKFileData;
+		pB5DFile->deSerializable(b5dFile);
+
+		m_VecFiles.push_back(pB5DFile);
+	}
+}
+
+bool JKFilesData::upgrade(Json::Value& result)
+{
+	int curVersion = 0;
+
+	if (!result["version"].isNull())
+		curVersion = result["version"].asUInt();
+
+	if (curVersion < 1)
+	{
+		result["version"] = 1;
+	}
+
+
+	Json::Value b5DFiles = result["B5DFiles"];
+	for (int i = 0; i < b5DFiles.size(); ++i)
+	{
+		Json::Value b5dFile = b5DFiles[i];
+
+		JKFileData::upgrade(curVersion, b5dFile);
+	}
+
+	return true;
 }
 
 int JKFilesData::fileCount()

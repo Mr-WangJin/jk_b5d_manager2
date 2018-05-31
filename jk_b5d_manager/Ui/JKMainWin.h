@@ -15,9 +15,13 @@ public:
 	JKMainWin(QWidget *parent = 0);
 	~JKMainWin();
 
+	static bool deleteDir(const QString &dirName);
+
 public slots:
 	void onAddFile();
+	void onBatchAdded();
 	void onDeleteFile();
+	void onUninstall();
 	void onSave();
 	void onOpenDir();
 	void onDelUnis();
@@ -30,15 +34,20 @@ public slots:
 	void onRunTool();
 	void onRunCraft();
 
+	void onTableViewContextMenuClicked(QPoint);
+
 protected:
 	void keyPressEvent(QKeyEvent *event) override;
 
 private:
 	void initClass();
+	void initContextMenu();
+	void addFile(QString fullFileName);
 
 	void tempWriteXML();
 private:
 	Ui::JKMainWin m_ui;
+	QMenu* tableViewMenu;
 
 	JKTableModel* m_pTableModel;
 	JKFilesData* m_pFilesData;

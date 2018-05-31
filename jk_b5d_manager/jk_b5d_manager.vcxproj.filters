@@ -102,6 +102,9 @@
     <ClInclude Include="resource.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="BLL\JKCommon.h">
+      <Filter>BLL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="jk_b5d_manager.rc" />

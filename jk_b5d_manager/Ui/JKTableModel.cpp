@@ -45,7 +45,7 @@ int JKTableModel::rowCount(const QModelIndex & parent) const
 
 int JKTableModel::columnCount(const QModelIndex & parent) const
 {
-	return 3;
+	return 4;
 }
 
 QVariant JKTableModel::data(const QModelIndex & index, int role) const
@@ -64,10 +64,15 @@ QVariant JKTableModel::data(const QModelIndex & index, int role) const
 		}
 		case 1:
 		{
-			QString tempStr(pFileData->getVersionNum().c_str());
+			QString tempStr(pFileData->getVersion().c_str());
 			return QVariant(tempStr);
 		}
 		case 2:
+		{
+			QString tempStr(pFileData->getRemark().c_str());
+			return QVariant(tempStr);
+		}
+		case 3:
 		{
 			QString tempStr(pFileData->getFullPath().c_str());
 			return QVariant(tempStr);
@@ -78,9 +83,14 @@ QVariant JKTableModel::data(const QModelIndex & index, int role) const
 	}
 	else if (role == Qt::BackgroundColorRole)
 	{
-		if(pFileData->isOffice())
-			return QColor(Qt::green);
+		try {
+			if (pFileData->isOffice())
+				return QColor(Qt::green);
+		}
+		catch (std::exception &e)
+		{
 
+		}
 	}
 	
 	return QVariant();
@@ -101,9 +111,13 @@ QVariant JKTableModel::headerData(int section, Qt::Orientation orientation, int 
 		}
 		case 1:
 		{
-			return QVariant(QStringLiteral("×¢ÊÍ"));
+			return QVariant(QStringLiteral("°æ±¾ºÅ"));
 		}
 		case 2:
+		{
+			return QVariant(QStringLiteral("×¢ÊÍ"));
+		}
+		case 3:
 		{
 			return QVariant(QStringLiteral("Â·¾¶"));
 		}
@@ -128,7 +142,15 @@ bool JKTableModel::setData(const QModelIndex & index, const QVariant & value, in
 	}
 	case 1:
 	{
-		pFileData->setVersionNum(value.toString().toStdString());
+		pFileData->setVersion(value.toString().toStdString());
+	}
+	case 2:
+	{
+		pFileData->setRemark(value.toString().toStdString());
+	}
+	case 3:
+	{
+		pFileData->setFullPath(value.toString().toStdString());
 	}
 	default:
 		break;
@@ -143,3 +165,4 @@ Qt::ItemFlags JKTableModel::flags(const QModelIndex & index) const
 
 	return  QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 }
+

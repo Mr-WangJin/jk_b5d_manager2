@@ -8,10 +8,12 @@ JKFileData::JKFileData()
 {
 }
 
-JKFileData::JKFileData(const std::string &fineName, const  std::string &versionNum, const std::string &fullPath)
-	: m_FileName(fineName)
-	, m_FullPath(fullPath)
-	, m_VersionNum(versionNum)
+JKFileData::JKFileData(const JKString &_fileName, const  JKString &_version,
+	const JKString _remark, const JKString &_fullPath)
+	: fileName(_fileName)
+	, fullPath(_fullPath)
+	, version(_version)
+	, remark(_remark)
 {
 }
 
@@ -19,41 +21,50 @@ JKFileData::~JKFileData()
 {
 }
 
-void JKFileData::setFileName(const std::string & fileName)
+void JKFileData::setFileName(const JKString & _fileName)
 {
-	m_FileName = fileName;
+	fileName = _fileName;
 }
 
-std::string JKFileData::getFileName()
+JKString JKFileData::getFileName()
 {
-	return m_FileName;
+	return fileName;
 }
 
-void JKFileData::setVersionNum(const std::string & versionNum)
+void JKFileData::setVersion(const JKString & versionNum)
 {
-	m_VersionNum = versionNum;
+	version = versionNum;
 }
 
-std::string JKFileData::getVersionNum()
+JKString JKFileData::getVersion()
 {
-	return m_VersionNum;
+	return version;
 }
 
-void JKFileData::setFullPath(const std::string & path)
+void JKFileData::setFullPath(const JKString & path)
 {
-	m_FullPath = path;
+	fullPath = path;
 }
 
-std::string JKFileData::getFullPath()
+JKString JKFileData::getFullPath()
 {
-	return m_FullPath;
+	return fullPath;
+}
+
+void JKFileData::setRemark(const JKString &_remark)
+{
+	remark = _remark;
+}
+JKString JKFileData::getRemark()
+{
+	return remark;
 }
 
 bool JKFileData::isOffice()
 {
 	if (cloudStr.empty())
 	{
-		std::string str = this->getFullPath();
+		JKString str = this->getFullPath();
 		QDir dir(QString::fromStdString(str));
 		dir.cdUp();
 
@@ -62,7 +73,7 @@ bool JKFileData::isOffice()
 		if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		{
 			file.close();
-			std::string error = "can not find" + fileName.toStdString();
+			JKString error = "can not find" + fileName.toStdString();
 			throw std::exception(error.c_str());
 		}
 
@@ -76,7 +87,7 @@ bool JKFileData::isOffice()
 		QDomNodeList lists = doc.elementsByTagName("CloudService_v1");
 		if (lists.count() == 0)
 		{
-			std::string error = "can not find CloudService_v1 ";
+			JKString error = "can not find CloudService_v1 ";
 			throw std::exception(error.c_str());
 		}
 		QDomElement ele = lists.at(0).toElement();
@@ -94,7 +105,7 @@ void JKFileData::updateXMLNode(const QString & fileName, const QString & opt, co
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		file.close();
-		std::string error = "can not find" + fileName.toStdString();
+		JKString error = "can not find" + fileName.toStdString();
 		throw std::exception(error.c_str());
 	}
 
@@ -108,7 +119,7 @@ void JKFileData::updateXMLNode(const QString & fileName, const QString & opt, co
 	QDomNodeList lists = doc.elementsByTagName(fieldName);
 	if (lists.count() == 0)
 	{
-		std::string error = "can not find" + fieldName.toStdString();
+		JKString error = "can not find" + fieldName.toStdString();
 		throw std::exception(error.c_str());
 	}
 	QDomElement ele = lists.at(0).toElement();
@@ -125,4 +136,33 @@ void JKFileData::updateXMLNode(const QString & fileName, const QString & opt, co
 
 		cloudStr = value.toStdString();
 	}
+}
+
+bool JKFileData::upgrade(const unsigned int &dataVersion, Json::Value& result)
+{
+	if (dataVersion < 1)
+	{
+		result["remark"] = result["versionNum"];
+		result["version"] = "";
+		result["versionNum"] = nullptr;
+	}
+
+	return true;
+}
+
+void JKFileData::serializable(Json::Value & result) noexcept
+{
+	result["name"] = fileName;
+	result["path"] = fullPath;
+	result["version"] = version;
+	result["remark"] = remark;
+}
+
+void JKFileData::deSerializable(Json::Value & result) noexcept
+{
+	setFileName(result["name"].asString());
+	std::string path = result["path"].asString();
+	setFullPath(path);
+	setRemark(result["remark"].asString());
+	setVersion(result["version"].asString());
 }

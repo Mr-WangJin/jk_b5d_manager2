@@ -2,8 +2,10 @@
    "B5DFiles" : [
       {
          "name" : "BIM5D.exe",
-         "path" : "F:/Program Files/Glodon/GBIM/Office/bin/BIM5D.exe",
-         "versionNum" : ""
+         "path" : "F:/Program Files/Glodon/GBIM/1526/bin/BIM5D.exe",
+         "remark" : "",
+         "version" : "3.5.0.1526"
       }
-   ]
+   ],
+   "version" : 1
 }
