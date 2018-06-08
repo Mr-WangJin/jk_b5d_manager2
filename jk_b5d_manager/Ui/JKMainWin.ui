@@ -167,6 +167,7 @@
     <addaction name="m_pActOpenFiePath"/>
     <addaction name="actSetOffice"/>
     <addaction name="actSetHuNan"/>
+    <addaction name="actSetOther"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu"/>
@@ -254,6 +255,11 @@
    </property>
    <property name="text">
     <string>卸载</string>
+   </property>
+  </action>
+  <action name="actSetOther">
+   <property name="text">
+    <string>修改为其他环境</string>
    </property>
   </action>
  </widget>

@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QXmlStreamReader>
 #include <QDomDocument>
+#include "JKOtherEnvrionmentDlg.h"
 
 USING_JK_NAMESPACE;
 
@@ -219,10 +220,11 @@ void JKMainWin::onSetOffice()
 	dir.cdUp(); 
 
 	try {
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudType", QString("Public"));
 		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v1", QString("https://bim5d.glodon.com/api/v1/"));
 		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v3", QString("https://bim5d.glodon.com/api/v3/"));
-		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v1", QString("https://bim5d.glodon.com/api/v1/"));
-		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v3", QString("https://bim5d.glodon.com/api/v3/"));
+		/*pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v1", QString("https://bim5d.glodon.com/api/v1/"));
+		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v3", QString("https://bim5d.glodon.com/api/v3/"));*/
 		QMessageBox::information(this, QStringLiteral("提示！"), QStringLiteral("设置成功！"));
 	}
 	catch (std::exception &e)
@@ -243,15 +245,52 @@ void JKMainWin::onSetHuNan()
 	dir.cdUp();
 
 	try {
+		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudType", QString("Public"));
 		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v1", QString("http://bim5d-hunan.glodon.com/api/v1/"));
 		pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v3", QString("http://bim5d-hunan.glodon.com/api/v3/"));
-		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v1", QString("http://bim5d-hunan.glodon.com/api/v1/"));
-		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v3", QString("http://bim5d-hunan.glodon.com/api/v3/"));
+		/*pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v1", QString("http://bim5d-hunan.glodon.com/api/v1/"));
+		pFileData->updateXMLNode(dir.path() + "\\config.xml", "update", "CloudService_v3", QString("http://bim5d-hunan.glodon.com/api/v3/"));*/
 		QMessageBox::information(this, QStringLiteral("提示！"), QStringLiteral("设置成功！"));
 	}
 	catch (std::exception &e)
 	{
 		QMessageBox::information(this, QStringLiteral("提示！"), QString("%1").arg(e.what()));
+	}
+}
+
+void JKMainWin::onSetOther()
+{
+	QModelIndex curIdx = m_ui.m_pTableView->currentIndex();
+	JKFileData* pFileData = m_pFilesData->getB5DFile(curIdx.row());
+	if (pFileData == nullptr)
+		return;
+
+	std::string str = pFileData->getFullPath();
+	QDir dir(QString::fromStdString(str));
+	dir.cdUp();
+
+	JKOtherEnvrionmentDlg* otherEnvironMentDlg = new JKOtherEnvrionmentDlg(this);
+	if (otherEnvironMentDlg->exec())
+	{
+		try
+		{
+			QString url = otherEnvironMentDlg->GetInputUrl();
+			if (otherEnvironMentDlg->IsPrivate())
+			{
+				 pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudType", QString("Private"));
+				 pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "PrivateCloudDocUrl", url + QString("/cloud"));
+			}
+			else
+			{
+				pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v1", url + QString("/api/v1/"));
+				pFileData->updateXMLNode(dir.path() + "\\BIM5D.xml", "update", "CloudService_v3", url + QString("/api/v3/"));
+			}
+			QMessageBox::information(this, QStringLiteral("提示！"), QStringLiteral("设置成功！"));
+		}
+		catch (std::exception& e)
+		{
+			QMessageBox::information(this, QStringLiteral("提示！"), QString("%1").arg(e.what()));
+		}
 	}
 }
 
@@ -352,6 +391,7 @@ void JKMainWin::initClass()
 
 	connect(m_ui.actSetOffice, SIGNAL(triggered()), this, SLOT(onSetOffice()));
 	connect(m_ui.actSetHuNan, SIGNAL(triggered()), this, SLOT(onSetHuNan()));
+	connect(m_ui.actSetOther, &QAction::triggered, this, &JKMainWin::onSetOther);
 }
 
 void JKMainWin::initContextMenu()
@@ -367,6 +407,7 @@ void JKMainWin::initContextMenu()
 	tableViewMenu->addAction(m_ui.actDelUnableFile);
 	tableViewMenu->addAction(m_ui.actSetOffice);
 	tableViewMenu->addAction(m_ui.actSetHuNan);
+	tableViewMenu->addAction(m_ui.actSetOther);
 }
 
 void JKMainWin::addFile(QString fullFileName)

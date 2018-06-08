@@ -139,18 +139,22 @@ bool JKTableModel::setData(const QModelIndex & index, const QVariant & value, in
 	case 0:
 	{
 		pFileData->setFileName(value.toString().toStdString());
+		break;
 	}
 	case 1:
 	{
 		pFileData->setVersion(value.toString().toStdString());
+		break;
 	}
 	case 2:
 	{
 		pFileData->setRemark(value.toString().toStdString());
+		break;
 	}
 	case 3:
 	{
 		pFileData->setFullPath(value.toString().toStdString());
+		break;
 	}
 	default:
 		break;

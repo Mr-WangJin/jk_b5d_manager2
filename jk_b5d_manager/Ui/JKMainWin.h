@@ -4,8 +4,10 @@
 #include <QMainWindow>
 #include "ui_JKMainWin.h"
 
+
 class JKTableModel;
 class JKFilesData;
+//class JKOtherEnvrionmentDlg;
 
 class JKMainWin : public QMainWindow
 {
@@ -29,6 +31,7 @@ public slots:
 
 	void onSetOffice();
 	void onSetHuNan();
+	void onSetOther();
 
 	void onRunExe();
 	void onRunTool();

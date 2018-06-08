@@ -32,6 +32,16 @@
     <Filter Include="BLL">
       <UniqueIdentifier>{e28e9669-722b-4c5b-9894-1651e60a9484}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\qrc_jk_b5d_manager.cpp">
@@ -71,6 +81,15 @@
     <ClCompile Include="GeneratedFiles\Release\moc_JKTableDelegate.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="JKOtherEnvrionmentDlg.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_JKOtherEnvrionmentDlg.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_JKOtherEnvrionmentDlg.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="jk_b5d_manager.qrc">
@@ -86,6 +105,12 @@
       <Filter>Ui</Filter>
     </CustomBuild>
     <CustomBuild Include="Ui\JKTableDelegate.h">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="JKOtherEnvrionmentDlg.h">
+      <Filter>Ui</Filter>
+    </CustomBuild>
+    <CustomBuild Include="JKOtherEnvrionmentDlg.ui">
       <Filter>Ui</Filter>
     </CustomBuild>
   </ItemGroup>

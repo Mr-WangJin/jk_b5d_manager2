@@ -122,11 +122,13 @@ void JKFileData::updateXMLNode(const QString & fileName, const QString & opt, co
 		JKString error = "can not find" + fieldName.toStdString();
 		throw std::exception(error.c_str());
 	}
-	QDomElement ele = lists.at(0).toElement();
-
 	if ("update" == opt)
 	{
-		ele.toElement().firstChild().setNodeValue(value);
+		for (int i = 0; i < lists.size(); i++)
+		{
+			QDomElement ele = lists.at(i).toElement();
+			ele.toElement().firstChild().setNodeValue(value);
+		}
 		if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 		{
 		}
